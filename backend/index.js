@@ -23,7 +23,7 @@ const PORT = 8000 || process.env.PORT
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log("Connect DB Ok");
-        console.log("Server is running");
+        console.log("Server is running port 8000");
     })
 })
 

@@ -9,7 +9,8 @@ import SummaryApi from '../common';
 import { toast } from 'react-toastify'
 
 const UploadProduct = ({
-    onClose
+    onClose,
+    fetchdata
 }) => {
 
     const [data, setData] = useState({
@@ -76,6 +77,7 @@ const UploadProduct = ({
         if (responseData.success) {
             toast.success(responseData?.message)
             onClose()
+            fetchdata()
         } else if (responseData.error) {
             toast.error(responseData?.message)
         }
@@ -130,7 +132,7 @@ const UploadProduct = ({
                             items-center flex-col gap-2'>
                                 <span className='text-4xl'><FaUpload /></span>
                                 <p className='text-sm'>Upload Product Image</p>
-                                <input type="file" id='uploadImageInput'
+                                <input type="file" id='uploadImageInput' name='uploadImageInput'
                                     className='hidden' onChange={handleUploadImage} required />
                             </div>
                         </div>
@@ -168,17 +170,18 @@ const UploadProduct = ({
                     <label htmlFor="price" className='mt-3'>Price: </label>
                     <input type="number" id='price' name='price' placeholder='Price'
                         value={data.price} onChange={handleOnChange}
-                        className='bg-slate-100 p-2 border rounded' required />
+                        className='bg-slate-100 p-2 border rounded' required min={0} />
 
 
                     <label htmlFor="sellingPrice" className='mt-3'>Selling Price: </label>
                     <input type="number" id='sellingPrice' name='sellingPrice' placeholder='Selling Price'
                         value={data.sellingPrice} onChange={handleOnChange}
-                        className='bg-slate-100 p-2 border rounded' required />
+                        className='bg-slate-100 p-2 border rounded' required min={0} />
 
                     <label htmlFor="description" className='mt-3'>Description: </label>
                     <textarea name="description" className='bg-slate-100 h-28 border resize-none'
-                        placeholder='Product description' onChange={handleOnChange} required></textarea>
+                        placeholder='Product description' onChange={handleOnChange} required value={data.description}>
+                    </textarea>
 
 
                     <button className='px-3 py-2 bg-red-600 text-white mb-10 hover:bg-red-700'>
