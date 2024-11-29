@@ -1,20 +1,28 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Logo from './Logo'
 import { IoSearch } from "react-icons/io5";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SummaryApi from '../common';
 import { toast } from 'react-toastify'
 import { setUserDetails } from '../store/userSlice'
 import ROLE from '../common/role';
+import Context from '../context';
 
 const Header = () => {
   const user = useSelector(state => state?.user?.user)
   const dispatch = useDispatch()
 
   const [menuDisplay, setMenuDisplay] = useState(false)
+
+  const context = useContext(Context)
+  const navigate = useNavigate()
+  const searchInput = useLocation()
+  const urlSearch = new URLSearchParams(searchInput?.search)
+  const searchQuery = urlSearch.getAll("q")
+  const [search, setSearch] = useState(searchQuery)
 
 
   const handleLogout = async () => {
@@ -28,10 +36,21 @@ const Header = () => {
     if (data.success) {
       toast.success(data.message)
       dispatch(setUserDetails(null))
-    } else if (data.error) {
+      navigate("/")
+    }
+    if (data.error) {
       toast.error(data.message)
     }
+  }
 
+  const handleSearch = (e) => {
+    const { value } = e.target
+    setSearch(value)
+    if (value) {
+      navigate(`/search?q=${value}`)
+    } else {
+      navigate("/search")
+    }
   }
 
   return (
@@ -47,7 +66,8 @@ const Header = () => {
         <div className='hidden lg:flex items-center w-full justify-between 
         max-w-sm border rounded-full focus-within:shadow-md pl-2'>
           <input type='text' placeholder='Search product...'
-            className='w-full outline-none pl-2' />
+            className='w-full outline-none pl-2' onChange={handleSearch}
+            value={search} />
           <div className='text-lg min-w-[50px] h-8 bg-red-600 flex 
           items-center justify-center rounded-r-full text-white'>
             <IoSearch />
@@ -92,13 +112,17 @@ const Header = () => {
             }
           </div>
 
-          <div className='text-3xl relative'>
-            <span><IoCartOutline /></span>
-            <div className='bg-red-600 text-white w-5 h-5 p-1 
+          {
+            user?._id && (
+              <Link to={"/cart"} className='text-3xl relative'>
+                <span><IoCartOutline /></span>
+                <div className='bg-red-600 text-white w-5 h-5 p-1 
             flex items-center justify-center rounded-full absolute -top-1 -right-3'>
-              <p className='text-sm'>0</p>
-            </div>
-          </div>
+                  <p className='text-sm'>{context?.cartProductCount}</p>
+                </div>
+              </Link>
+            )
+          }
 
           <div>
             {

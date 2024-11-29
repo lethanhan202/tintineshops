@@ -9,6 +9,8 @@ import AllUser from "../pages/AllUser.jsx";
 import AllProduct from "../pages/AllProduct.jsx";
 import CategoryProduct from "../pages/CategoryProduct.jsx";
 import ProductDetails from "../pages/ProductDetails.jsx";
+import Cart from "../pages/Cart.jsx";
+import SearchProduct from "../pages/SearchProduct.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,12 +34,20 @@ const router = createBrowserRouter([
                 element: <SignUp />
             },
             {
-                path: "product-category/:categoryName",
+                path: "product-category",
                 element: <CategoryProduct />
             },
             {
                 path: "product/:id",
                 element: <ProductDetails />
+            },
+            {
+                path: "cart",
+                element: <Cart />
+            },
+            {
+                path: 'search',
+                element: <SearchProduct />
             },
             {
                 path: "admin_panel",

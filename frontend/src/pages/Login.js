@@ -15,7 +15,7 @@ const Login = () => {
         password: ""
     })
     const navigate = useNavigate()
-    const { fetchUserDetails } = useContext(Context)
+    const { fetchUserDetails, fetchUserAddToCart } = useContext(Context)
 
 
     const handleOnChange = (e) => {
@@ -47,7 +47,9 @@ const Login = () => {
             toast.success(dataApi.message)
             navigate("/")
             fetchUserDetails()
-        } else if (dataApi.error) {
+            fetchUserAddToCart()
+        }
+        if (dataApi.error) {
             toast.error(dataApi.message)
         }
     }

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import fetchCategoryProduct from '../helpers/fetchCategoryProduct'
 import displayCurrency from '../helpers/dsiplayCurrency'
 import addToCart from '../helpers/addToCart';
 import { Link } from 'react-router-dom';
+import Context from '../context';
+import scrollTop from '../helpers/scrollTop';
 
 const CategoryProductDisplay = ({ category, heading }) => {
 
@@ -10,6 +12,12 @@ const CategoryProductDisplay = ({ category, heading }) => {
     const [loading, setLoading] = useState(true)
     const loadingList = new Array(13).fill(null)
 
+    const { fetchUserAddToCart } = useContext(Context)
+
+    const handleAddToCart = async (e, id) => {
+        await addToCart(e, id)
+        fetchUserAddToCart()
+    }
 
     const fecthData = async () => {
         setLoading(true)
@@ -50,8 +58,8 @@ const CategoryProductDisplay = ({ category, heading }) => {
                 ) :
                     (data.map((product, index) => {
                         return (
-                            <Link to={"product/" + product?._id} className='w-full mix-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] 
-                             rounded-sm shadow bg-white'>
+                            <Link to={"/product/" + product?._id} className='w-full mix-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] 
+                             rounded-sm shadow bg-white' onClick={scrollTop}>
                                 <div className='bg-slate-200 h-48 p-4 min-w-[120px] md:min-w-[145px] flex items-center justify-center'>
                                     <img src={product?.productImage[0]}
                                         className="object-scale-down h-full transition-all hover:scale-110 mix-blend-multiply" />
@@ -72,7 +80,7 @@ const CategoryProductDisplay = ({ category, heading }) => {
                                             {displayCurrency(product?.price)}
                                         </p>
                                     </div>
-                                    <button onClick={(e) => addToCart(e, product?._id)}
+                                    <button onClick={(e) => handleAddToCart(e, product?._id)}
                                         className='text-sm bg-red-600 hover:bg-red-700 text-white 
                                     px-3 py-0.5 rounded-full'>
                                         Add to Cart
