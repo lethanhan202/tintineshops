@@ -3,6 +3,7 @@ import SummaryApi from '../common'
 import Context from '../context'
 import displayCurrency from '../helpers/dsiplayCurrency'
 import { FaTrash } from "react-icons/fa6";
+import { loadStripe } from '@stripe/stripe-js'
 
 const Cart = () => {
 
@@ -104,6 +105,27 @@ const Cart = () => {
     const totalQty = data.reduce((preValue, currentValue) => preValue + currentValue.quantity, 0)
     const totalPrice = data.reduce((preValue, currentValue) => preValue + (currentValue?.productId?.sellingPrice * currentValue.quantity), 0)
 
+    const handlePayment = async () => {
+        const stripePromise = await loadStripe('pk_test_51NF4jXE7MDcwEPLX1utqKtvM3e3zNtItDQWFO8iaRrVL4HEjYahwgBBm08pCQkUV24N4C3f5MwY1lsBQTy8PwULr003XovdfMs')
+
+        const response = await fetch(SummaryApi.payment.url, {
+            method: SummaryApi.payment.method,
+            credentials: 'include',
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ cartItem: data })
+        })
+
+        const dataResponse = await response.json()
+
+        console.log("data response", dataResponse);
+
+        if (dataResponse?.id) {
+            stripePromise.redirectToCheckout({ sessionId: dataResponse.id })
+        }
+    }
+
     return (
         <div className='container mx-auto'>
             <div className='text-center text-lg my-3'>
@@ -189,40 +211,45 @@ const Cart = () => {
                 </div>
 
                 {/**Total product */}
-                <div className='mt-5 lg:mt-0 w-full max-w-sm'>
-                    {
-                        loading ? (
-                            <div className='h-36 animate-pulse bg-slate-200 border-slate-300 border'>
-                            </div>
-                        ) : (
-                            <div className='h-36 bg-white'>
-                                <h2 className='text-white bg-red-600 px-4 py-1'>
-                                    Summary
-                                </h2>
+                {
+                    data[0] && (
+                        <div className='mt-5 lg:mt-0 w-full max-w-sm'>
+                            {
+                                loading ? (
+                                    <div className='h-36 animate-pulse bg-slate-200 border-slate-300 border'>
+                                    </div>
+                                ) : (
+                                    <div className='h-36 bg-white'>
+                                        <h2 className='text-white bg-red-600 px-4 py-1'>
+                                            Summary
+                                        </h2>
 
-                                {/**total quantity product */}
-                                <div className='flex items-center justify-between px-4 gap-2
+                                        {/**total quantity product */}
+                                        <div className='flex items-center justify-between px-4 gap-2
                                 font-medium text-lg text-slate-600'>
-                                    <p>Quantity: </p>
-                                    <p>{totalQty}</p>
-                                </div>
+                                            <p>Quantity: </p>
+                                            <p>{totalQty}</p>
+                                        </div>
 
-                                {/**total price */}
-                                <div className='flex items-center justify-between px-4 gap-2
+                                        {/**total price */}
+                                        <div className='flex items-center justify-between px-4 gap-2
                                 font-medium text-lg text-slate-600'>
-                                    <p>Total Price: </p>
-                                    <p>{displayCurrency(totalPrice)}</p>
-                                </div>
+                                            <p>Total Price: </p>
+                                            <p>{displayCurrency(totalPrice)}</p>
+                                        </div>
 
-                                {/**payment */}
-                                <button className='bg-blue-600 text-white w-full p-2'>
-                                    Payment
-                                </button>
+                                        {/**payment */}
+                                        <button className='bg-blue-600 text-white w-full p-2'
+                                            onClick={handlePayment}>
+                                            Payment
+                                        </button>
 
-                            </div>
-                        )
-                    }
-                </div>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    )
+                }
             </div>
         </div>
     )

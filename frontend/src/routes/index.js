@@ -11,6 +11,10 @@ import CategoryProduct from "../pages/CategoryProduct.jsx";
 import ProductDetails from "../pages/ProductDetails.jsx";
 import Cart from "../pages/Cart.jsx";
 import SearchProduct from "../pages/SearchProduct.jsx";
+import SuccessPayment from "../pages/SuccessPayment.jsx";
+import CancelPayment from "../pages/CancelPayment.jsx";
+import OrderPage from "../pages/OrderPage.jsx";
+import AllOrder from "../pages/AllOrder.jsx";
 
 const router = createBrowserRouter([
     {
@@ -50,6 +54,18 @@ const router = createBrowserRouter([
                 element: <SearchProduct />
             },
             {
+                path: "success",
+                element: <SuccessPayment />
+            },
+            {
+                path: 'cancel',
+                element: <CancelPayment />
+            },
+            {
+                path: "order",
+                element: <OrderPage />
+            },
+            {
                 path: "admin_panel",
                 element: <AdminPanel />,
                 children: [
@@ -60,6 +76,10 @@ const router = createBrowserRouter([
                     {
                         path: "all-products",
                         element: <AllProduct />
+                    },
+                    {
+                        path: "all-order",
+                        element: <AllOrder />
                     }
                 ]
             },

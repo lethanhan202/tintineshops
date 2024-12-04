@@ -105,7 +105,10 @@ const Header = () => {
                         </Link>
                       )
                     }
-
+                    <Link to={"/order"} className='whitespace-nowrap md:block hidden p-2 hover:bg-slate-100'
+                      onClick={() => setMenuDisplay(prev => !prev)}>
+                      Order
+                    </Link>
                   </nav>
                 </div>
               )
