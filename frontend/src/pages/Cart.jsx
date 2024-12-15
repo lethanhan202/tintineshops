@@ -5,13 +5,13 @@ import displayCurrency from '../helpers/dsiplayCurrency'
 import { FaTrash } from "react-icons/fa6";
 import { loadStripe } from '@stripe/stripe-js'
 
+
 const Cart = () => {
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const context = useContext(Context)
     const loadingCart = new Array(context.cartProductCount).fill(null)
-
 
     const fetchData = async () => {
         const response = await fetch(SummaryApi.addToCartView.url, {
@@ -105,8 +105,9 @@ const Cart = () => {
     const totalQty = data.reduce((preValue, currentValue) => preValue + currentValue.quantity, 0)
     const totalPrice = data.reduce((preValue, currentValue) => preValue + (currentValue?.productId?.sellingPrice * currentValue.quantity), 0)
 
-    const handlePayment = async () => {
-        const stripePromise = await loadStripe('pk_test_51NF4jXE7MDcwEPLX1utqKtvM3e3zNtItDQWFO8iaRrVL4HEjYahwgBBm08pCQkUV24N4C3f5MwY1lsBQTy8PwULr003XovdfMs')
+    const handleStripePayment = async () => {
+        const stripePromise = await
+            loadStripe('pk_test_51NF4jXE7MDcwEPLX1utqKtvM3e3zNtItDQWFO8iaRrVL4HEjYahwgBBm08pCQkUV24N4C3f5MwY1lsBQTy8PwULr003XovdfMs')
 
         const response = await fetch(SummaryApi.payment.url, {
             method: SummaryApi.payment.method,
@@ -118,8 +119,6 @@ const Cart = () => {
         })
 
         const dataResponse = await response.json()
-
-        console.log("data response", dataResponse);
 
         if (dataResponse?.id) {
             stripePromise.redirectToCheckout({ sessionId: dataResponse.id })
@@ -152,7 +151,7 @@ const Cart = () => {
                         ) : (
                             data.map((product, index) => {
                                 return (
-                                    <div key={product?._id} className='w-full my-2 bg-white h-32 border
+                                    <div key={product?._id + index} className='w-full my-2 bg-white h-32 border
                                      border-slate-300 rounded grid grid-cols-[128px,1fr]'>
                                         {/**product image */}
                                         <div className="w-[125px] h-[125px] bg-slate-300">
@@ -239,11 +238,12 @@ const Cart = () => {
                                         </div>
 
                                         {/**payment */}
-                                        <button className='bg-blue-600 text-white w-full p-2'
-                                            onClick={handlePayment}>
-                                            Payment
-                                        </button>
-
+                                        <div>
+                                            <button className='bg-blue-600 text-white w-full p-2'
+                                                onClick={() => handleStripePayment()}>
+                                                Payment
+                                            </button>
+                                        </div>
                                     </div>
                                 )
                             }

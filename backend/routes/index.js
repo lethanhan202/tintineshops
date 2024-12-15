@@ -26,6 +26,10 @@ const paymentController = require('../controller/order/paymentController.js')
 const webhooks = require('../controller/order/webhook.js')
 const orderController = require('../controller/order/orderController.js')
 const allOrderController = require('../controller/order/allOrderController.js')
+const deleteProductController = require('../controller/user/deleteProduct.js')
+const deleteUserController = require('../controller/user/deleteUser.js')
+
+
 
 //user
 router.post("/signup", userSignUpController)
@@ -36,6 +40,8 @@ router.get("/userLogout", userLogout)
 //admin panel
 router.get("/all-user", authToken, allUsers)
 router.post("/update-user", authToken, updateUser)
+router.post("/delete-product", authToken, deleteProductController)
+router.post("/delete-user", authToken, deleteUserController)
 
 //product
 router.post("/upload-product", authToken, uploadProductController)
@@ -47,6 +53,7 @@ router.post("/product-details", getProductDetails)
 router.get("/search", searchProduct)
 router.post("/filter-product", filterProductController)
 
+
 //user add to cart
 router.post("/addtocart", authToken, addToCartController)
 router.get("/countAddToCart", authToken, countAddToCart)
@@ -56,9 +63,8 @@ router.post("/delete-cart", authToken, deleteAddToCart)
 
 //payment & order
 router.post("/checkout", authToken, paymentController)
-router.post("/webhook", webhooks) // /api/webhook
+router.post("/webhook", webhooks)                       // /api/webhook
 router.get("/order-list", authToken, orderController)
 router.get("/all-order", authToken, allOrderController)
-
 
 module.exports = router

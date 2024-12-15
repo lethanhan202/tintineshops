@@ -178,7 +178,8 @@ const AdminEditProduct = ({ onClose, productData, fetchdata }) => {
 
                     <label htmlFor="description" className='mt-3'>Description: </label>
                     <textarea name="description" className='bg-slate-100 h-28 border resize-none'
-                        placeholder='Product description' onChange={handleOnChange} required value={data.description}>
+                        placeholder='Product description' onChange={handleOnChange} required
+                        value={data.description}>
                     </textarea>
 
 

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import moment from 'moment'
 import { MdModeEdit } from "react-icons/md";
 import ChangeUserRole from '../components/ChangeUserRole';
-
+import { FaTrash } from "react-icons/fa6";
 
 const AllUser = () => {
 
@@ -32,12 +32,37 @@ const AllUser = () => {
             toast.error(dataRes.message)
         }
 
-        console.log(dataRes);
+        //console.log(dataRes);
     }
 
     useEffect(() => {
         fetchAllUsers()
     }, [])
+
+    const fetchDeleteUser = async (id) => {
+        const res = await fetch(SummaryApi.adminDeleteUser.url, {
+            method: SummaryApi.adminDeleteUser.method,
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                _id: id
+            }),
+            credentials: 'include'
+        })
+
+        const resData = await res.json()
+
+        if (resData.success) {
+            fetchAllUsers()
+            toast.success(resData.message)
+
+        }
+        if (resData.error) {
+            toast.error(resData.message)
+        }
+    }
+
 
     return (
         <div className='pb-4 bg-white'>
@@ -71,6 +96,13 @@ const AllUser = () => {
                                                 setOpenUpdateRole(true)
                                             }}>
                                             <MdModeEdit />
+                                        </button>
+                                        <button className='bg-red-300 hover:bg-red-500 hover:text-white 
+                                        p-2 rounded-full cursor-pointer'
+                                            onClick={() => {
+                                                fetchDeleteUser(el?._id)
+                                            }}>
+                                            <FaTrash />
                                         </button>
                                     </td>
                                 </tr>

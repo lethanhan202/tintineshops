@@ -165,14 +165,12 @@ const SignUp = () => {
                         mx-auto block mt-6'>
                             Sign Up
                         </button>
-
                         <p className='my-5'>Already have account? <Link to={'/login'}
                             className='hover:underline hover:text-red-500'>
                             Login here
                         </Link>
                         </p>
                     </form>
-
                 </div>
             </div>
         </section>
