@@ -1,3 +1,0 @@
-# XÂY  DỰNG WEBSITE BÁN THIẾT BỊ ĐIỆN TỬ BẰNG REACTJS
-
-## 
